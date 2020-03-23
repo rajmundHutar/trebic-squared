@@ -1,0 +1,35 @@
+{block content}
+
+{form questionForm}
+    <div class="field">
+        {label name, class => 'label'/}
+        <div class="control">
+            {input name, class => 'input'}
+        </div>
+    </div>
+    <div class="field">
+        {label image, class => 'label'/}
+        <div class="control">
+            {input image, class => 'input'}
+        </div>
+    </div>
+    <div class="field">
+        {label date, class => 'label'/}
+        <div class="control">
+            {input date, class => 'input'}
+        </div>
+    </div>
+    <div class="field">
+        {label correctAnswer, class => 'label'/}
+        <div class="control">
+            {input correctAnswer, class => 'input'}
+        </div>
+    </div>
+
+    <div class="field is-grouped">
+        <div class="control">
+            {input ok, class => "button is-link"}
+        </div>
+    </div>
+
+{/form}

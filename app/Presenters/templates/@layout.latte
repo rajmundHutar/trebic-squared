@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+    <title>{ifset title}{include title|stripHtml} | {/ifset}The Game</title>
+</head>
+
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item">
+            LOGO
+        </a>
+
+        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"
+           data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+            <a n:href="Homepage:default" class="navbar-item">
+                Mapa
+            </a>
+            <a n:href="Homepage:score" class="navbar-item">
+                Žebříček
+            </a>
+
+        </div>
+
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div class="buttons">
+                    {if !$user->isLoggedIn()}
+                        <a n:href="Homepage:login" class="button is-primary">
+                            <strong>Přihlásit</strong>
+                        </a>
+                        <a n:href="Homepage:register" class="button is-light">
+                            Registrace
+                        </a>
+                    {else}
+                        <a n:href="Homepage:user" class="button is-light">
+                            Moje pokusy
+                        </a>
+                    {/if}
+                    {if $user->isInRole('admin')}
+                        <a n:href="Admin:" class="button is-light">
+                            Administrace
+                        </a>
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<section class="section">
+
+    <article n:foreach="$flashes as $flash" class="message is-{$flash->type}">
+        <div class="message-body">
+            {$flash->message}
+        </div>
+    </article>
+
+    <div class="container">
+        {include content}
+    </div>
+</section>
+
+
+{block scripts}
+    <script src="https://nette.github.io/resources/js/3/netteForms.min.js"></script>
+{/block}
+</body>
+</html>

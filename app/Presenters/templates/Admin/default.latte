@@ -1,0 +1,36 @@
+{block content}
+
+<div class="columns">
+    <div class="column">
+        <a n:href="question" class="button is-primary">
+            Přidat
+        </a>
+    </div>
+</div>
+
+<table class="table" n:if="$questions">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Datum</th>
+        <th>Název</th>
+        <th>Obrázek</th>
+        <th>Pozice</th>
+        <th></th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr n:foreach="$questions as $question">
+        <td>{$question['id']}</td>
+        <td>{$question['date']->format('d. m. Y')}</td>
+        <td>{$question['name']}</td>
+        <td>{$question['image']}</td>
+        <td>{=App\Models\QuestionModel::cartesianToAlphaNumber((int) $question['x'], (int) $question['y'])}</td>
+        <td>
+            <a n:href="question, id => $question['id']" class="button is-primary">Upravit</a>
+            <a n:href="delete!, id => $question['id']" class="button is-danger">Smazat</a>
+        </td>
+    </tr>
+    </tbody>
+</table>

@@ -1,0 +1,36 @@
+{block content}
+
+{form registerForm}
+    <div class="field">
+        {label name, class => 'label'/}
+        <div class="control">
+            {input name, class => 'input'}
+        </div>
+    </div>
+    <div class="field">
+        {label email, class => 'label'/}
+        <div class="control">
+            {input email, class => 'input'}
+        </div>
+    </div>
+    <div class="field">
+        {label password, class => 'label'/}
+        <div class="control">
+            {input password, class => 'input'}
+        </div>
+    </div>
+    <div class="field">
+        {label passwordCheck, class => 'label'/}
+        <div class="control">
+            {input passwordCheck, class => 'input'}
+        </div>
+    </div>
+
+
+    <div class="field is-grouped">
+        <div class="control">
+            {input ok, class => "button is-link"}
+        </div>
+    </div>
+
+{/form}
