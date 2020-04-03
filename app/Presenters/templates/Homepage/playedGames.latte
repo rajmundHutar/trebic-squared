@@ -62,7 +62,7 @@
                         <div id="question-{$question['id']}" class="hidden">
                             {var $questionCoords = App\Models\QuestionModel::cartesianToAlphaNumber($question['x'], $question['y'])}
                             Správná odpověď:
-                            <a n:href="Homepage:, highlightCorrect => $questionCoords">
+                            <a n:href="Homepage:#map, highlightCorrect => $questionCoords">
                                 <strong>{=App\Models\QuestionModel::cartesianToAlphaNumber($question['x'], $question['y'])}</strong>
                             </a><br>
                             <p>{$question['answer_description']}</p>
@@ -83,7 +83,7 @@
                         {if $guess}
                             Váše odpověď:
                             {var $guessCoords = App\Models\QuestionModel::cartesianToAlphaNumber($guess['x'], $guess['y'])}
-                            <a n:href="Homepage:, highlightCorrect => $questionCoords, highlightGuess => $guessCoords">
+                            <a n:href="Homepage:#map, highlightCorrect => $questionCoords, highlightGuess => $guessCoords">
                                 <strong>
                                     {=$guessCoords}
                                 </strong>

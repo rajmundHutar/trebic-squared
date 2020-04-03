@@ -9,6 +9,11 @@ window.addEventListener('load', (e) => {
 				guessElement.value = coord;
 			}
 
+			var prefillElement = document.getElementById('prefill');
+			if (prefillElement) {
+				prefillElement.value = coord;
+			}
+
 			toggleModal('guess-form');
 
 		}, false);

@@ -52,7 +52,7 @@
                         {if $userGuess}
                             {var $guessCoords = App\Models\QuestionModel::cartesianToAlphaNumber($userGuess['x'], $userGuess['y'])}
                             Váše odpověď je:
-                            <a n:href="Homepage:, highlightGuess => $guessCoords">
+                            <a n:href="Homepage:#map, highlightGuess => $guessCoords">
                                 <strong>{$guessCoords}</strong>
                             </a>
                         {else}
@@ -64,6 +64,7 @@
         </div>
     </section>
 
+    <a id="map"></a>
     <div id="game">
         {for $j = 0; $j < $height; $j++}
             {for $i = 0; $i < $width; $i++}
@@ -119,7 +120,7 @@
                         {form prefillQuestionForm}
                             <div class="field">
                                 <div class="control">
-                                {input prefill, class => "input", id => "guess"}
+                                {input prefill, class => "input", id => "prefill"}
                                 </div>
                             </div>
 

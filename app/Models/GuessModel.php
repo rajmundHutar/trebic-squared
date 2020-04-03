@@ -25,7 +25,7 @@ class GuessModel {
 
 	public function saveGuess(array $data) {
 
-		$guess = $this->fetchByQuestion($data['question_id'], $data['user_id']);
+		$guess = $this->fetchByQuestion((int) $data['question_id'], (int) $data['user_id']);
 		if ($guess) {
 			$data['id'] = $guess['id'];
 		}

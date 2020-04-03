@@ -49,7 +49,7 @@
         </td>
         <td>
             {var $coords = App\Models\QuestionModel::cartesianToAlphaNumber((int) $question['x'], (int) $question['y'])}
-            <a n:href="Homepage:, highlightCorrect => $coords">
+            <a n:href="Homepage:#map, highlightCorrect => $coords">
                 {$coords}
             </a>
         </td>
