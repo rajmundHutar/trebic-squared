@@ -10,7 +10,7 @@ class QuestionModel {
 
 	const MAX_POINTS = 10;
 	const MAX_BONUS_POINTS = 5;
-	const START = 10; // Hours >= 19
+	const START = 19; // Hours >= 19
 	const END = 22; // Hours < 22
 
 	/** @var Context */
@@ -26,8 +26,15 @@ class QuestionModel {
 
 	public function save(array $data) {
 
-		$data['image'] = implode(';', $this->moveImages([$data['image']], 'questions'));
-		$data['answer_images'] = implode(';', $this->moveImages($data['answer_images'], 'answers'));
+		if ($data['new_image']->getError() == UPLOAD_ERR_OK) {
+			$data['image'] = implode(';', $this->moveImages([$data['new_image']], 'questions'));
+		}
+		unset($data['new_image']);
+
+		if ($data['new_answer_images']) {
+			$data['answer_images'] = implode(';', $this->moveImages($data['new_answer_images'], 'answers'));
+		}
+		unset($data['new_answer_images']);
 
 		$data['date'] = new \DateTime($data['date']);
 
@@ -118,7 +125,10 @@ class QuestionModel {
 			}
 
 			usort($score[$question['id']], function ($a, $b) {
-				return $b['points'] <=> $a['points'];
+				if ($b['points'] === $a['points']) {
+					return $b['points'] <=> $a['points'];
+				}
+				return $b['date'] <=> $a['date'];
 			});
 		}
 

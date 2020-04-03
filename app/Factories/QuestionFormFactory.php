@@ -18,12 +18,13 @@ class QuestionFormFactory {
 		$f->addText('description', 'Popisek (zobrazí se s otázkou)')
 			->setRequired('Popisek musí byt vyplněn');
 
-		$f->addUpload('image', 'Vyber jeden obrázek k otázce (MUSÍ být JPG)')
-			->setRequired('Obrázek je povinný');
+		$f->addUpload('new_image', 'Vyber jeden obrázek k otázce (MUSÍ být JPG)');
+		$f->addHidden('image');
 
 		$f->addText('answer_description', 'Popisek (zobrazí se s odpovědí)');
 
-		$f->addMultiUpload('answer_images', 'Vyber až 3 obrázky k odpovědi (MUSÍ být JPG)');
+		$f->addMultiUpload('new_answer_images', 'Vyber až 3 obrázky k odpovědi (MUSÍ být JPG)');
+		$f->addHidden('answer_images');
 
 		$f->addText('date', 'Datum')
 			->setRequired('Datum musí být vyplněno')

@@ -15,8 +15,8 @@
     </div>
     <div class="field">
         <div class="file has-name is-fullwidth">
-            {label image, class => 'file-label'}
-                {input image, class => 'file-input'}
+            {label new_image, class => 'file-label'}
+                {input new_image, class => 'file-input'}
                 <span class="file-cta">
                 <span class="file-icon">
                     <i class="fas fa-upload"></i>
@@ -27,6 +27,13 @@
             </span>
             {/label}
         </div>
+        {if $question['image'] ?? null}
+            <br>
+            <a data-fslightbox href="{$baseUrl}{$question['image']}" class="image is-128x128">
+                <img class="question-image" src="{$baseUrl}{$question['image']}">
+            </a>
+            {input image}
+        {/if}
     </div>
     <div class="field">
         {label answer_description, class => 'label'/}
@@ -36,8 +43,8 @@
     </div>
     <div class="field">
         <div class="file has-name is-fullwidth">
-            {label answer_images, class => 'file-label'}
-                {input answer_images, class => 'file-input'}
+            {label new_answer_images, class => 'file-label'}
+                {input new_answer_images, class => 'file-input'}
                 <span class="file-cta">
                     <span class="file-icon">
                         <i class="fas fa-upload"></i>
@@ -48,6 +55,16 @@
                 </span>
             {/label}
         </div>
+        {if $question['answer_images'] ?? null}
+            <br>
+            {var $images = explode(';', $question['answer_images'])}
+            {foreach $images as $value}
+                <a data-fslightbox href="{$baseUrl}{$value}" class="image is-128x128">
+                    <img class="question-image" src="{$baseUrl}{$value}">
+                </a>
+                {input answer_images}
+            {/foreach}
+        {/if}
     </div>
     <div class="field">
         {label date, class => 'label'/}

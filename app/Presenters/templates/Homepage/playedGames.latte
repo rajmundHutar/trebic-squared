@@ -6,12 +6,14 @@
         <table class="table">
             <thead>
             <tr>
+                <th>Pořadí</th>
                 <th>Tým</th>
                 <th class="has-text-right">Celkem bodů</th>
             </tr>
             </thead>
             <tbody>
             <tr n:foreach="$total as $row">
+                <td>{$iterator->counter}</td>
                 <td>{$row['user']['name']}</td>
                 <td class="has-text-right">{$row['totalPoints']}</td>
             </tr>
@@ -66,7 +68,7 @@
                             <p>{$question['answer_description']}</p>
                             {if $question['answer_images']}
                                 {var $images = explode(';', $question['answer_images'])}
-                                {foreach $images as $key => $value}
+                                {foreach $images as $value}
                                     <a n:if="$value" data-fslightbox="{$question['id']}-b" href="{$baseUrl}{$value}">
                                         <span class="icon is-large">
                                           <i class="far fa-image fa-2x"></i>
@@ -79,7 +81,7 @@
                     <div class="column is-one-fifth">
                         {var $guess = $userGuesses[$question['id']] ?? null}
                         {if $guess}
-                            Váš tip:
+                            Váše odpověď:
                             {var $guessCoords = App\Models\QuestionModel::cartesianToAlphaNumber($guess['x'], $guess['y'])}
                             <a n:href="Homepage:, highlightCorrect => $questionCoords, highlightGuess => $guessCoords">
                                 <strong>
@@ -97,6 +99,7 @@
                         <table n:if="$dayScore" class="table">
                             <thead>
                             <tr>
+                                <th>Pořadí</th>
                                 <th>Tým</th>
                                 <th>Odpověď</th>
                                 <th>Bodů</th>
@@ -104,6 +107,7 @@
                             </thead>
                             <tbody>
                             <tr n:foreach="$dayScore as $row" title="{$row['date']|date:'j. n. Y H:i:s'}">
+                                <td>{$iterator->counter}</td>
                                 <td>{$row['user']['name']}</td>
                                 <td>{$row['guess']}</td>
                                 <td>

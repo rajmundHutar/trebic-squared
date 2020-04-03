@@ -114,7 +114,7 @@ final class HomepagePresenter extends BasePresenter {
 
 					$this->guessModel->saveGuess($values);
 
-					$this->flashMessage('Váš tip byl uložen.');
+					$this->flashMessage('Váše odpověď byla uložena.');
 
 				} else if (QuestionModel::isBeforeGame()) {
 					$this->flashMessage(sprintf('Velitelský čas je %s. Je tedy před %s hodinou.', date('H:i:s'), QuestionModel::START));
@@ -141,8 +141,9 @@ final class HomepagePresenter extends BasePresenter {
 
 	public function renderDefault($highlightCorrect = null, $highlightGuess = null) {
 
-		$this->template->question = $this->questionModel->fetchByDate(new \DateTime());
-
+		$question = $this->questionModel->fetchByDate(new \DateTime());
+		$this->template->question = $question;
+		$this->template->userGuess = $question ? $this->guessModel->fetchByQuestion($question['id'], $this->user->getId()) : null;
 		$this->template->showQuestion = QuestionModel::isGameOn();
 
 		$highlightCorrect = mb_strtoupper($highlightCorrect ?: '');

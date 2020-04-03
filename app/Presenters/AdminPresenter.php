@@ -56,11 +56,14 @@ final class AdminPresenter extends BasePresenter {
 		else {
 			if ($id) {
 				$question = $this->questionModel->fetch($id);
+				$this->template->question = $question;
 				$this['questionForm']->setDefaults(
 					[
 						'name' => $question['name'],
 						'description' => $question['description'],
+						'image' => $question['image'],
 						'answer_description' => $question['answer_description'],
+						'answer_images' => $question['answer_images'],
 						'date' => $question['date']->format('d.n.Y'),
 						'correctAnswer' => QuestionModel::cartesianToAlphaNumber((int) $question['x'], (int) $question['y']),
 					]
@@ -82,6 +85,7 @@ final class AdminPresenter extends BasePresenter {
 			function(Form $form) {
 
 				$values = $form->getValues(true);
+
 				$id = $this->getParameter('id');
 				if ($id) {
 					$values['id'] = $id;

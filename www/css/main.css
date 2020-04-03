@@ -23,8 +23,6 @@
 }
 
 .question-image {
-	background-size: cover;
-	background-position: center center;
 	border-radius: 5px;
 	max-height: 128px;
 	max-width: 100%;

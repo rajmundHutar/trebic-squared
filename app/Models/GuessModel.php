@@ -13,7 +13,7 @@ class GuessModel {
 		$this->db = $db;
 	}
 
-	public function fetchByQuestion(int $questionId, $userId) {
+	public function fetchByQuestion(int $questionId, int $userId) {
 
 		return $this->db
 			->table(\Table::GUESS)
