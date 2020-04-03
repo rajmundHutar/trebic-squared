@@ -1,0 +1,97 @@
+
+.center{
+	text-align: center;
+}
+
+.hidden {
+	display: none;
+}
+
+.column.is-centered {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	text-align: center;
+}
+
+.text-align-right {
+	text-align: right;
+}
+
+.logo {
+	color: white;
+}
+
+.question-image {
+	background-size: cover;
+	background-position: center center;
+	border-radius: 5px;
+	max-height: 128px;
+	max-width: 100%;
+	width: auto !important;
+}
+
+#game {
+	width: 100%;
+	height: 63vw;
+	background: url("../images/the-map.jpg");
+	background-size: cover;
+
+	display: grid;
+	grid-template-columns: repeat(50, 2%);
+	grid-template-rows: repeat(30, 3.33%);
+
+}
+
+.square {
+	display: flex;
+
+	overflow: hidden;
+	justify-content: center;
+	align-items: center;
+
+	font-size: 90%;
+
+}
+.square .coordinates {
+	display: none;
+}
+.square .coordinates.show {
+	display: flex;
+}
+
+.square.clickable:hover {
+	cursor: pointer;
+	background-color: rgba(220, 20, 60, 0.5);
+	box-shadow: 0 0 2px 2px rgba(220, 20, 60, 0.5);
+}
+
+.square.clickable:hover .coordinates{
+	display: block;
+}
+
+.square.highlight-correct {
+	background-color: rgba(38, 191, 11, 0.5);
+	animation-name: shine-correct;
+	animation-duration: 1s;
+	animation-iteration-count: infinite;
+}
+
+@keyframes shine-correct {
+	0%   {box-shadow: none}
+	50%  {box-shadow: 0 5px 15px rgba(46, 236, 13, 0.5);background-color: rgba(46, 236, 13, 0.5);}
+	100%   {box-shadow: none}
+}
+
+.square.highlight-guess {
+	background-color: rgba(255, 140, 0, 0.5) !important;
+	animation-name: shine-guess;
+	animation-duration: 1s;
+	animation-iteration-count: infinite;
+}
+
+@keyframes shine-guess {
+	0%   {box-shadow: none}
+	50%  {box-shadow: 0 5px 15px rgba(246, 202, 42, 0.5);background-color: rgba(246, 202, 42, 0.5);}
+	100%   {box-shadow: none}
+}

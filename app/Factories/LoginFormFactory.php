@@ -13,10 +13,12 @@ class LoginFormFactory {
 		$f = new Form();
 
 		$f->addText('email', 'E-mail')
-			->setRequired('Zadejte e-mail');;
+			->setRequired('Zadejte e-mail')
+			->setHtmlAttribute('placeholder', 'E-mail');
 
 		$f->addPassword('password', 'Heslo')
-			->setRequired('Zadejte heslo');
+			->setRequired('Zadejte heslo')
+			->setHtmlAttribute('placeholder', 'Heslo');
 
 		$f->addSubmit('ok', 'Přihlásit');
 

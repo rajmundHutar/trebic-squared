@@ -1,5 +1,7 @@
 {block content}
 
+{control adminMenu}
+
 <div class="columns">
     <div class="column">
         <a n:href="question" class="button is-primary">
@@ -14,7 +16,10 @@
         <th>ID</th>
         <th>Datum</th>
         <th>Název</th>
+        <th>Popis</th>
         <th>Obrázek</th>
+        <th>Odpoveď</th>
+        <th>Obrázeky k odpovědi</th>
         <th>Pozice</th>
         <th></th>
     </tr>
@@ -23,10 +28,31 @@
     <tbody>
     <tr n:foreach="$questions as $question">
         <td>{$question['id']}</td>
-        <td>{$question['date']->format('d. m. Y')}</td>
+        <td>{$question['date']->format('j. n. Y')}</td>
         <td>{$question['name']}</td>
-        <td>{$question['image']}</td>
-        <td>{=App\Models\QuestionModel::cartesianToAlphaNumber((int) $question['x'], (int) $question['y'])}</td>
+        <td>{$question['description']}</td>
+        <td>
+            <a data-fslightbox="{$question['id']}" href="{$baseUrl}{$question['image']}">
+                Náhled
+            </a>
+        </td>
+        <td>{$question['answer_description']}</td>
+        <td>
+            {var $images = explode(';', $question['answer_images'])}
+            {foreach $images as $key => $value}
+                <a n:if="$value" data-fslightbox="{$question['id']}" href="{$baseUrl}{$value}">
+                    <span class="icon is-medium">
+                      <i class="far fa-image"></i>
+                    </span>
+                </a>
+            {/foreach}
+        </td>
+        <td>
+            {var $coords = App\Models\QuestionModel::cartesianToAlphaNumber((int) $question['x'], (int) $question['y'])}
+            <a n:href="Homepage:, highlightCorrect => $coords">
+                {$coords}
+            </a>
+        </td>
         <td>
             <a n:href="question, id => $question['id']" class="button is-primary">Upravit</a>
             <a n:href="delete!, id => $question['id']" class="button is-danger">Smazat</a>

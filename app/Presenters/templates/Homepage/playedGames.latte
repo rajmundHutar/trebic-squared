@@ -1,0 +1,122 @@
+{block content}
+
+<div class="columns">
+    <div class="column is-centered">
+        <h2 class="title is-2">Celkové skóre</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Tým</th>
+                <th class="has-text-right">Celkem bodů</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr n:foreach="$total as $row">
+                <td>{$row['user']['name']}</td>
+                <td class="has-text-right">{$row['totalPoints']}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<h1 class="title is-1">Minulá kola</h1>
+
+{foreach $questions as $question}
+
+    {if $question['date']->format('Y-m-d') == (new DateTime())->format('Y-m-d')}
+        {* This is today *}
+        {var $showToday = App\Models\QuestionModel::isAfterGame()}
+    {else}
+        {var $showToday = true}
+    {/if}
+
+    <article n:if="$showToday" class="media">
+        <figure class="media-left">
+            <p class="image is-128x128">
+                <a data-fslightbox="{$question['id']}-a" href="{$baseUrl}{$question['image']}">
+                    <img src="{$baseUrl}{$question['image']}" class="question-image">
+                </a>
+            </p>
+        </figure>
+        <div class="media-content">
+            <div class="content">
+
+                <div class="columns">
+                    <div class="column is-one-fifth">
+                        <small>{$question['date']->format('j. n. Y')}</small><strong class="title is-5">
+                            {$question['name']}
+                        </strong><br>
+
+                        <p>
+                            {$question['description']}
+                        </p>
+                    </div>
+                    <div class="column is-one-fifth">
+                        <a href="#" class="toggle button is-warning" data-toggle-target="question-{$question['id']}">
+                            Ukázat odpověď
+                        </a>
+                        <div id="question-{$question['id']}" class="hidden">
+                            {var $questionCoords = App\Models\QuestionModel::cartesianToAlphaNumber($question['x'], $question['y'])}
+                            Správná odpověď:
+                            <a n:href="Homepage:, highlightCorrect => $questionCoords">
+                                <strong>{=App\Models\QuestionModel::cartesianToAlphaNumber($question['x'], $question['y'])}</strong>
+                            </a><br>
+                            <p>{$question['answer_description']}</p>
+                            {if $question['answer_images']}
+                                {var $images = explode(';', $question['answer_images'])}
+                                {foreach $images as $key => $value}
+                                    <a n:if="$value" data-fslightbox="{$question['id']}-b" href="{$baseUrl}{$value}">
+                                        <span class="icon is-large">
+                                          <i class="far fa-image fa-2x"></i>
+                                        </span>
+                                    </a>
+                                {/foreach}
+                            {/if}
+                        </div>
+                    </div>
+                    <div class="column is-one-fifth">
+                        {var $guess = $userGuesses[$question['id']] ?? null}
+                        {if $guess}
+                            Váš tip:
+                            {var $guessCoords = App\Models\QuestionModel::cartesianToAlphaNumber($guess['x'], $guess['y'])}
+                            <a n:href="Homepage:, highlightCorrect => $questionCoords, highlightGuess => $guessCoords">
+                                <strong>
+                                    {=$guessCoords}
+                                </strong>
+                            </a>
+                            <br>
+                            Body:
+                            <strong>{=App\Models\QuestionModel::countPoints($question['x'], $question['y'], $guess['x'], $guess['y'])}</strong>/{=App\Models\QuestionModel::MAX_POINTS}
+                            <br>
+                        {/if}
+                    </div>
+                    <div class="column">
+                        {var $dayScore = $score[$question['id']] ?? null}
+                        <table n:if="$dayScore" class="table">
+                            <thead>
+                            <tr>
+                                <th>Tým</th>
+                                <th>Odpověď</th>
+                                <th>Bodů</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr n:foreach="$dayScore as $row" title="{$row['date']|date:'j. n. Y H:i:s'}">
+                                <td>{$row['user']['name']}</td>
+                                <td>{$row['guess']}</td>
+                                <td>
+                                    {$row['points']}
+                                    {if $row['bonusPoints'] ?? null} + {$row['bonusPoints']}{/if}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </article>
+
+{/foreach}

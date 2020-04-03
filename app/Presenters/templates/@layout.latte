@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html id="html">
 <head>
     <meta charset="utf-8">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{$baseUrl}/css/main.css?{$version}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
-    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 
-    <title>{ifset title}{include title|stripHtml} | {/ifset}The Game</title>
+    <title>{ifset title}{include title|stripHtml} | {/ifset}Třebíč²</title>
 </head>
 
 <body>
 
-<nav class="navbar" role="navigation" aria-label="main navigation">
+<nav class="navbar is-dark" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-        <a class="navbar-item">
-            LOGO
+        <a n:href="Homepage:default" class="navbar-item">
+            <strong class="logo">Třebíč²</strong>
         </a>
 
         <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"
@@ -31,13 +31,19 @@
             <a n:href="Homepage:default" class="navbar-item">
                 Mapa
             </a>
-            <a n:href="Homepage:score" class="navbar-item">
+            <a n:href="Homepage:playedGames" class="navbar-item">
                 Žebříček
+            </a>
+            <a n:href="Homepage:rules" class="navbar-item">
+                Pravidla
             </a>
 
         </div>
 
         <div class="navbar-end">
+            <span n:if="$user->isLoggedIn()" class="navbar-item">
+                {$user->getIdentity()->name}
+            </span>
             <div class="navbar-item">
                 <div class="buttons">
                     {if !$user->isLoggedIn()}
@@ -48,8 +54,8 @@
                             Registrace
                         </a>
                     {else}
-                        <a n:href="Homepage:user" class="button is-light">
-                            Moje pokusy
+                        <a n:href="Homepage:logout" class="button is-light">
+                            Odhlásit
                         </a>
                     {/if}
                     {if $user->isInRole('admin')}
@@ -63,13 +69,16 @@
     </div>
 </nav>
 
-<section class="section">
+<article n:foreach="$flashes as $flash" class="message is-{$flash->type}">
+    <div class="message-body">
+        {$flash->message}
+    </div>
+</article>
 
-    <article n:foreach="$flashes as $flash" class="message is-{$flash->type}">
-        <div class="message-body">
-            {$flash->message}
-        </div>
-    </article>
+{block outside}
+{/block}
+
+<section class="section">
 
     <div class="container">
         {include content}
@@ -78,7 +87,10 @@
 
 
 {block scripts}
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <script src="https://nette.github.io/resources/js/3/netteForms.min.js"></script>
+    <script src="{$baseUrl}/js/fslightbox.js"></script>
+    <script src="{$baseUrl}/js/main.js?{$version}"></script>
 {/block}
 </body>
 </html>

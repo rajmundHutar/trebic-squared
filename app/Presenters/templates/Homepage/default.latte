@@ -1,1 +1,124 @@
+{block outside}
+
+    <section class="section">
+
+        <div class="container">
+            <div class="columns">
+                <div class="column">
+                    <h1 class="title is-1 center">Třebíč²</h1>
+                </div>
+            </div>
+            <div class="columns">
+                <div class="column">
+                    <h3 class="title is-3">Milí Třebíčáci,</h3>
+                    <p>
+                        jelikož to vypadá, že současná situace nás bude ještě nějakou dobu omezovat v našich jinak běžných aktivitách, připravili jsme pro všechny zájemce drobnou on-line hru. Zjistíte u ní, jak moc jste všímaví a znáte své město.
+                    </p>
+                    <p>
+                        Hra vám nezabere více než pár minut denně a její princip je velmi
+                        jednoduchý – každý den přesně v {=App\Models\QuestionModel::START} hodin zveřejníme fotografii
+                        zachycující nějaké místo v Třebíči a vaším úkolem bude vybrat na mapě
+                        přesné místo, kde se vyfocený objekt nachází.
+
+                    </p>
+                    <a n:href="rules">Podrobnější pravidla zde...</a>
+                </div>
+            </div>
+            <div class="columns is-vcentered">
+                <div n:if="$showQuestion && $question" class="column">
+                    <a data-fslightbox href="{$baseUrl}{$question['image']}">
+                        <img class="question-image" src="{$baseUrl}{$question['image']}">
+                    </a>
+
+                    {*<a data-fslightbox href="{$baseUrl}{$question['image']}">
+                        <div class="question-image" style="background-image: url('{$baseUrl}{$question['image']}');">
+                        </div>
+                    </a>*}
+                </div>
+                <div class="column is-four-fifths">
+                    {if !$showQuestion}
+                        <h3 class="title is-3">Hrajeme od {=App\Models\QuestionModel::START}:00 do {=App\Models\QuestionModel::END}:00</h3>
+                    {/if}
+                    {if $showQuestion && $question}
+                        <h2 class="title is-2">{$question['name']}</h2>
+                        <p>{$question['description']}</p>
+                    {elseif !$question && $user->isInRole('admin')}
+                        <h4 class="title is-4">Dneska zatím žádná otázka, zkus to později.</h4>
+                    {elseif !$user->isLoggedIn()}
+                        <h3 class="title is-3">Pro hádání je potřeba se <a n:href="Homepage:login">přihlásit</a></h3>
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="game">
+        {for $j = 0; $j < $height; $j++}
+            {for $i = 0; $i < $width; $i++}
+                {var $x = $i + 1}
+                {var $y = App\Models\QuestionModel::intToAlpha($j)}
+                <div n:class="square, $user->isLoggedIn() ? clickable, $y.$x == $highlightCorrect ? highlight-correct, $y.$x == $highlightGuess ? highlight-guess"
+                        data-coordinates="{$y}{$x}" data-cartez="{$i}x{$j}">
+                    <div n:class="coordinates, $i==0 || $j==0 ? show"
+                            data-coordinates="{$y}{$x}">
+                        {$j!=0 || ($i==$j && $i==0) ? $y : ""}{$i!=0 || ($i==$j && $i==0) ? $x : ""}
+                    </div>
+                </div>
+            {/for}
+        {/for}
+    </div>
+
+{/block}
 {block content}
+
+    {if $user->isLoggedIn()}
+        <div class="modal" id="guess-form">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Třebíč² - {=date('j. n. Y')}</p>
+                    <button class="delete" aria-label="close" id="close-modal"></button>
+                </header>
+                <section class="modal-card-body">
+                    {if $showQuestion}
+                        {form guessForm}
+                            <div class="field">
+                                {label guess/}
+                                <div class="control">
+                                    {input guess, class => "input", id => "guess"}
+                                </div>
+                            </div>
+
+                            <div class="field is-grouped">
+                                <div class="control">
+                                    {input ok, class => "button is-link"}
+                                </div>
+                            </div>
+                        {/form}
+                    {else}
+                        <h3 class="title is-3">Hrajeme od {=App\Models\QuestionModel::START}:00 do {=App\Models\QuestionModel::END}:00</h3>
+                    {/if}
+                    {if $user->isInRole('admin')}
+                        {form prefillQuestionForm}
+                            <div class="field">
+                                <div class="control">
+                                {input prefill, class => "input", id => "guess"}
+                                </div>
+                            </div>
+
+                            <div class="field is-grouped">
+                                <div class="control">
+                                    {input ok, class => "button is-link"}
+                                </div>
+                            </div>
+                        {/form}
+                    {/if}
+                </section>
+            </div>
+        </div>
+    {/if}
+
+
+{/block}
+
+{block script}

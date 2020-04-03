@@ -1,0 +1,20 @@
+{block content}
+
+{control adminMenu}
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Jméno týmu</th>
+        <th>e-mail</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr n:foreach="$users as $userData">
+        <td>{$userData['id']}</td>
+        <td>{$userData['name']}</td>
+        <td>{$userData['email']}</td>
+    </tr>
+    </tbody>
+</table>

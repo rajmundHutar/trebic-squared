@@ -33,4 +33,13 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`id`, `email`, `password`, `name`, `role`) VALUES
 (5,	'rajmund.hutar@gmail.com',	'$2y$10$NtL58sBtv5rrVDwfUPj1g.lVhJS/0r.J0yXEcRhJJpf/IV/uHvtRa',	'Jaroslav Hutař',	'admin');
 
+ALTER TABLE `question`
+CHANGE `name` `description` text COLLATE 'utf8_czech_ci' NOT NULL AFTER `id`,
+CHANGE `image` `image` text COLLATE 'utf8_czech_ci' NOT NULL AFTER `description`,
+ADD `answer_description` text COLLATE 'utf8_czech_ci' NULL AFTER `image`,
+ADD `answer_images` text COLLATE 'utf8_czech_ci' NULL AFTER `answer_description`,
+CHANGE `date` `date` date NOT NULL AFTER `answer_images`;
+
+ALTER TABLE `question`
+ADD `name` text NOT NULL AFTER `id`;
 -- 2020-03-23 20:54:29

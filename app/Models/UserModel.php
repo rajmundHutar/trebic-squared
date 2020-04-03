@@ -26,6 +26,23 @@ class UserModel implements IAuthenticator {
 
 	}
 
+	public function fetch(int $userId) {
+
+		return $this->db
+			->table(\Table::USER)
+			->wherePrimary($userId)
+			->fetch();
+
+	}
+
+	public function fetchAll() {
+
+		return $this->db
+			->table(\Table::USER)
+			->fetchAll();
+
+	}
+
 	public function save(array $data) {
 
 		$data['password'] = $this->passwords->hash($data['password']);
@@ -76,6 +93,7 @@ class UserModel implements IAuthenticator {
 
 		return new Identity($row['id'], $row['role'], [
 			'email' => $row['email'],
+			'name' => $row['name'],
 		]);
 
 	}

@@ -3,21 +3,32 @@
 {form loginForm}
     <div class="field">
         {label email, class => 'label'/}
-        <div class="control">
+        <p class="control has-icons-left has-icons-right">
             {input email, class => 'input'}
-        </div>
+            <span class="icon is-small is-left">
+      <i class="fas fa-envelope"></i>
+    </span>
+            <span class="icon is-small is-right">
+      <i class="fas fa-check"></i>
+    </span>
+        </p>
     </div>
     <div class="field">
         {label password, class => 'label'/}
-        <div class="control">
+        <p class="control has-icons-left">
             {input password, class => 'input'}
-        </div>
+            <span class="icon is-small is-left">
+      <i class="fas fa-lock"></i>
+    </span>
+        </p>
+    </div>
+    <div class="field">
+        <p class="control">
+            {input ok, class => "button is-success"}
+        </p>
     </div>
 
-    <div class="field is-grouped">
-        <div class="control">
-            {input ok, class => "button is-link"}
-        </div>
+    <div class="field">
+        Nemáte účet? <a n:href="register">Registrujte se</a>
     </div>
-
 {/form}

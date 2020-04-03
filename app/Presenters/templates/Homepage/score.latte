@@ -1,0 +1,40 @@
+{block content}
+
+<h2 class="title is-2">Jednotlivá kola</h2>
+{foreach $questions as $question}
+
+    {if $question['date']->format('Y-m-d') == (new DateTime())->format('Y-m-d')}
+        {* This is today *}
+        {var $showToday = App\Models\QuestionModel::isAfterGame()}
+    {else}
+        {var $showToday = true}
+    {/if}
+
+    <h3 class="title is-3">
+        {$question['name']} - <small>{=$question['date']->format('j. n. y')}</small>
+    </h3>
+    <h4 class="subtitle is-4">{$question['description']}</h4>
+    {var $correct = App\Models\QuestionModel::cartesianToAlphaNumber($question['x'], $question['y'])}
+    <h5 class="subtitle is-5">Správná odpoveď: {$correct}</h5>
+    {var $dayScore = $score[$question['id']] ?? null}
+    <table n:if="$dayScore" class="table">
+        <thead>
+        <tr>
+            <th>Tým</th>
+            <th>Odpověď</th>
+            <th>Bodů</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr n:foreach="$dayScore as $row">
+            <td>{$row['user']['name']}</td>
+            <td>{$row['guess']}</td>
+            <td>
+                {$row['points']}
+                {if $row['bounusPoints'] ?? null} + {$row['bounusPoints']}{/if}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <p n:if="!$dayScore">Žádné tipy v tomto dnu</p>
+{/foreach}
