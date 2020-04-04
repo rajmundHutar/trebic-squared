@@ -64,7 +64,11 @@ class QuestionModel {
 
 		if ($past) {
 			$d = new \DateTime();
-			$query->where('date <= ?', $d->format('Y-m-d'));
+			if (self::isAfterGame()) {
+				$query->where('date <= ?', $d->format('Y-m-d'));
+			} else {
+				$query->where('date < ?', $d->format('Y-m-d'));
+			}
 		}
 
 		return $query->fetchAll();
@@ -89,14 +93,48 @@ class QuestionModel {
 
 	}
 
-	public function fetchScore() {
+	public function fetchScore(int $questionId) {
+
+		$question = $this->fetch($questionId);
+
 		$score = [];
+		$guesses = $question->related('guess');
+		$bonusPoints = $this->fetchBonusPoints($question['id']);
+		foreach ($guesses as $guess) {
+
+			$points = self::countPoints($question['x'], $question['y'], $guess['x'], $guess['y']);
+
+			$userBonusPoints = $bonusPoints[$guess['user_id']] ?? 0;
+
+			$score[] = [
+				'user' => $guess->user,
+				'date' => $guess['date'],
+				'points' => $points,
+				'bonusPoints' => $userBonusPoints,
+				'combinedPoints' => $points + $userBonusPoints,
+				'guess' => self::cartesianToAlphaNumber($guess['x'], $guess['y']),
+			];
+
+		}
+
+		usort($score, function ($a, $b) {
+			if ($b['combinedPoints'] !== $a['combinedPoints']) {
+				return $b['combinedPoints'] <=> $a['combinedPoints'];
+			}
+			return $b['date'] <=> $a['date'];
+		});
+
+		return $score;
+
+	}
+
+	public function fetchTotalScore() {
 		$total = [];
 
+		// Fetches today AFTER its done
 		$questions = $this->fetchAll();
 
 		foreach ($questions as $question) {
-			$score[$question['id']] = [];
 			$guesses = $question->related('guess');
 			$bonusPoints = $this->fetchBonusPoints($question['id']);
 			foreach ($guesses as $guess) {
@@ -104,14 +142,6 @@ class QuestionModel {
 				$points = self::countPoints($question['x'], $question['y'], $guess['x'], $guess['y']);
 
 				$userBonusPoints = $bonusPoints[$guess['user_id']] ?? 0;
-
-				$score[$question['id']][] = [
-					'user' => $guess->user,
-					'date' => $guess['date'],
-					'points' => $points,
-					'bonusPoints' => $userBonusPoints,
-					'guess' => self::cartesianToAlphaNumber($guess['x'], $guess['y']),
-				];
 
 				if (isset($total[$guess->user_id])) {
 					$total[$guess->user_id]['totalPoints'] += $points + $userBonusPoints;
@@ -123,20 +153,13 @@ class QuestionModel {
 					];
 				}
 			}
-
-			usort($score[$question['id']], function ($a, $b) {
-				if ($b['points'] === $a['points']) {
-					return $b['points'] <=> $a['points'];
-				}
-				return $b['date'] <=> $a['date'];
-			});
 		}
 
 		usort($total, function ($a, $b) {
 			return $b['totalPoints'] <=> $a['totalPoints'];
 		});
 
-		return [$total, $score];
+		return $total;
 
 	}
 
@@ -271,7 +294,7 @@ class QuestionModel {
 	public static function isAfterGame() {
 
 		$hour = date('H');
-		return $hour > self::END;
+		return $hour >= self::END;
 
 	}
 

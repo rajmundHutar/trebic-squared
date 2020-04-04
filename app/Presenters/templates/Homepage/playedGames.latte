@@ -2,39 +2,13 @@
 
 <div class="columns">
     <div class="column is-centered">
-        <h2 class="title is-2">Celkové skóre</h2>
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Pořadí</th>
-                <th>Tým</th>
-                <th class="has-text-right">Celkem bodů</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr n:foreach="$total as $row">
-                <td>{$iterator->counter}</td>
-                <td>{$row['user']['name']}</td>
-                <td class="has-text-right">{$row['totalPoints']}</td>
-            </tr>
-            </tbody>
-        </table>
+        <h1 class="title is-3">Minulá kola</h1>
     </div>
 </div>
 
-
-<h1 class="title is-1">Minulá kola</h1>
-
 {foreach $questions as $question}
 
-    {if $question['date']->format('Y-m-d') == (new DateTime())->format('Y-m-d')}
-        {* This is today *}
-        {var $showToday = App\Models\QuestionModel::isAfterGame()}
-    {else}
-        {var $showToday = true}
-    {/if}
-
-    <article n:if="$showToday" class="media">
+    <article class="media">
         <figure class="media-left">
             <p class="image is-128x128">
                 <a data-fslightbox="{$question['id']}-a" href="{$baseUrl}{$question['image']}">
@@ -46,7 +20,7 @@
             <div class="content">
 
                 <div class="columns">
-                    <div class="column is-one-fifth">
+                    <div class="column is-one-quarter">
                         <small>{$question['date']->format('j. n. Y')}</small><strong class="title is-5">
                             {$question['name']}
                         </strong><br>
@@ -54,10 +28,13 @@
                         <p>
                             {$question['description']}
                         </p>
+                        <a n:href="gameDetail, id => $question['id']" class="button is-success is-light">
+                            Výsledky
+                        </a>
                     </div>
-                    <div class="column is-one-fifth">
+                    <div class="column">
                         <a href="#" class="toggle button is-warning" data-toggle-target="question-{$question['id']}">
-                            Ukázat odpověď
+                            Ukázat správnou odpověď
                         </a>
                         <div id="question-{$question['id']}" class="hidden">
                             {var $questionCoords = App\Models\QuestionModel::cartesianToAlphaNumber($question['x'], $question['y'])}
@@ -78,7 +55,7 @@
                             {/if}
                         </div>
                     </div>
-                    <div class="column is-one-fifth">
+                    <div class="column is-one-quarter">
                         {var $guess = $userGuesses[$question['id']] ?? null}
                         {if $guess}
                             Váše odpověď:
@@ -93,30 +70,6 @@
                             <strong>{=App\Models\QuestionModel::countPoints($question['x'], $question['y'], $guess['x'], $guess['y'])}</strong>/{=App\Models\QuestionModel::MAX_POINTS}
                             <br>
                         {/if}
-                    </div>
-                    <div class="column">
-                        {var $dayScore = $score[$question['id']] ?? null}
-                        <table n:if="$dayScore" class="table">
-                            <thead>
-                            <tr>
-                                <th>Pořadí</th>
-                                <th>Tým</th>
-                                <th>Odpověď</th>
-                                <th>Bodů</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr n:foreach="$dayScore as $row" title="{$row['date']|date:'j. n. Y H:i:s'}">
-                                <td>{$iterator->counter}</td>
-                                <td>{$row['user']['name']}</td>
-                                <td>{$row['guess']}</td>
-                                <td>
-                                    {$row['points']}
-                                    {if $row['bonusPoints'] ?? null} + {$row['bonusPoints']}{/if}
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </div>

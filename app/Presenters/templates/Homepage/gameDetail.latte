@@ -1,0 +1,39 @@
+{block content}
+
+<div class="columns">
+    <div class="column is-centered">
+        <h1 class="title is-3">Výsledky ze dne {$question['date']|date:'j. n. Y'}</h1>
+        <h2 class="subtitle is-3">{$question['name']}</h2>
+    </div>
+</div>
+
+<a n:href="playedGames" class="button">Zpět</a>
+
+<div class="columns">
+    <div class="column is-centered">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Pořadí</th>
+                <th>Tým</th>
+                <th>Odpověď</th>
+                <th>Bodů</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr n:foreach="$score as $row"
+                    title="{$row['date']|date:'j. n. Y H:i:s'}"
+                    n:class="$user->isLoggedIn() && $user->getId() == $row['user']['id'] ? is-selected"
+            >
+                <td>{$iterator->counter}</td>
+                <td>{$row['user']['name']}</td>
+                <td>{$row['guess']}</td>
+                <td>
+                    {$row['points']}
+                    {if $row['bonusPoints'] ?? null} + {$row['bonusPoints']}{/if}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

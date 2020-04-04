@@ -43,3 +43,8 @@ CHANGE `date` `date` date NOT NULL AFTER `answer_images`;
 ALTER TABLE `question`
 ADD `name` text NOT NULL AFTER `id`;
 -- 2020-03-23 20:54:29
+
+ALTER TABLE `user`
+CHANGE `name` `name` varchar(255) COLLATE 'utf8_czech_ci' NOT NULL AFTER `password`;
+ALTER TABLE `user`
+ADD UNIQUE `name` (`name`);

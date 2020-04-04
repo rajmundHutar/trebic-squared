@@ -3,7 +3,7 @@
 }
 
 .hidden {
-	display: none;
+	display: none !important;
 }
 
 .column.is-centered {
@@ -91,4 +91,11 @@
 	0%   {box-shadow: none}
 	50%  {box-shadow: 0 5px 15px rgba(246, 202, 42, 0.5);background-color: rgba(246, 202, 42, 0.5);}
 	100%   {box-shadow: none}
+}
+
+.facebook {
+	display: flex;
+	height: 100%;
+	align-items: center;
+	justify-content: center;
 }

@@ -48,6 +48,9 @@ window.addEventListener('load', (e) => {
 		});
 	}
 
+	/**
+	 * Toggler
+	 */
 	document.querySelectorAll('.toggle').forEach( el => {
 		el.addEventListener('click', (e) => {
 

@@ -16,7 +16,8 @@ class RegisterFormFactory {
 			->setRequired('Zadejte název týmu');
 
 		$f->addText('email', 'E-mail')
-			->setRequired('Zadejte e-mail');;
+			->setRequired('Zadejte e-mail')
+			->addRule($f::EMAIL, 'Zadjte validní e-mail');
 
 		$f->addPassword('password', 'Heslo')
 			->setRequired('Zadejte heslo');

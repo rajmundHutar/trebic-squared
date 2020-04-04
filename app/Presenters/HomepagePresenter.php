@@ -60,12 +60,12 @@ final class HomepagePresenter extends BasePresenter {
 
 					$this->user->login($values['email'], $values['password']);
 
-					$this->flashMessage('Regsitrace úspěšná!', \Flash::SUCCESS);
+					$this->flashMessage('Registrace úspěšná!', \Flash::SUCCESS);
 
 				} catch (Nette\Security\AuthenticationException $e) {
 					$this->flashMessage('Chybý e-mail nebo heslo', \Flash::ERROR);
 				} catch (Nette\Database\UniqueConstraintViolationException $e) {
-					$this->flashMessage('Tento e-mail je již registrován. Zkuste se přihlásit.', \Flash::ERROR);
+					$this->flashMessage('Tento e-mail nebo jméno je již registrováno.', \Flash::ERROR);
 				}
 
 				$this->redirect('default');
@@ -143,7 +143,7 @@ final class HomepagePresenter extends BasePresenter {
 
 		$question = $this->questionModel->fetchByDate(new \DateTime());
 		$this->template->question = $question;
-		$this->template->userGuess = $question ? $this->guessModel->fetchByQuestion($question['id'], $this->user->getId()) : null;
+		$this->template->userGuess = $question ? $this->guessModel->fetchByQuestion($question['id'], (int) $this->user->getId()) : null;
 		$this->template->showQuestion = QuestionModel::isGameOn();
 
 		$highlightCorrect = mb_strtoupper($highlightCorrect ?: '');
@@ -159,16 +159,35 @@ final class HomepagePresenter extends BasePresenter {
 
 	public function renderPlayedGames() {
 
-		$questions = $this->questionModel->fetchAll();
-
+		// Fetches today AFTER its done
+		$this->template->questions = $this->questionModel->fetchAll();
 		$this->template->userGuesses = $this->user->isLoggedIn() ? $this->guessModel->fetchUserGuesses($this->user->getId()) : [];
 
-		$this->template->questions = $questions;
+	}
 
-		[$total, $score] = $this->questionModel->fetchScore();
+	public function renderGameDetail(int $id) {
 
-		$this->template->total = $total;
-		$this->template->score = $score;
+		$question = $this->questionModel->fetch($id);
+
+		$d = new \DateTime();
+		if ($question['date']->format('Y-m-d') > $d->format('Y-m-d')) {
+			$this->flashMessage('Otázka nenalezena', \Flash::ERROR);
+			$this->redirect('playedGames');
+		}
+
+		if ($question['date']->format('Y-m-d') == $d->format('Y-m-d') && !QuestionModel::isAfterGame()) {
+			$this->flashMessage('Toto kolo se ještě hraje', \Flash::WARNING);
+			$this->redirect('default');
+		}
+
+		$this->template->score = $this->questionModel->fetchScore($id);
+		$this->template->question = $question;
+
+	}
+
+	public function renderScore() {
+
+		$this->template->total = $this->questionModel->fetchTotalScore();
 
 	}
 

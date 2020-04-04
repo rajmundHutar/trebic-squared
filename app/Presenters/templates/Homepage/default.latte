@@ -9,7 +9,7 @@
                 </div>
             </div>
             <div class="columns">
-                <div class="column">
+                <div class="column is-four-fifths">
                     <h3 class="title is-3">Milí Třebíčáci,</h3>
                     <p>
                         jelikož to vypadá, že současná situace nás bude ještě nějakou dobu omezovat v našich jinak běžných aktivitách, připravili jsme pro všechny zájemce drobnou on-line hru. Zjistíte u ní, jak moc jste všímaví a znáte své město.
@@ -22,28 +22,35 @@
                     </p>
                     <a n:href="rules">Podrobnější pravidla zde...</a>
                 </div>
+                <div class="column ">
+                    <div class="facebook">
+                        <div>
+                        <a href="https://www.facebook.com/Trebicsquared-107548000907836" target="_blank">
+                            <span class="icon is-large">
+                                 <i class="fab fa-3x fa-facebook-square"></i>
+                            </span>
+                        </a>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="columns is-vcentered">
                 <div n:if="$showQuestion && $question" class="column">
                     <a data-fslightbox href="{$baseUrl}{$question['image']}">
                         <img class="question-image" src="{$baseUrl}{$question['image']}">
                     </a>
-
-                    {*<a data-fslightbox href="{$baseUrl}{$question['image']}">
-                        <div class="question-image" style="background-image: url('{$baseUrl}{$question['image']}');">
-                        </div>
-                    </a>*}
                 </div>
                 <div class="column is-half">
                     {if !$showQuestion}
-                        <h3 class="title is-3">Hrajeme od {=App\Models\QuestionModel::START}:00 do {=App\Models\QuestionModel::END}:00</h3>
+                        <h3 class="title is-3">Hrajeme kadžý den od {=App\Models\QuestionModel::START}:00 do {=App\Models\QuestionModel::END}:00</h3>
                     {/if}
                     {if $showQuestion && $question}
                         <h2 class="title is-2">{$question['name']}</h2>
                         <p>{$question['description']}</p>
                     {elseif !$question}
                         <h4 class="title is-4">Dneska zatím žádná otázka, začínáme v sobotu 4. 4. 2020 v {=App\Models\QuestionModel::START}:00.</h4>
-                    {elseif !$user->isLoggedIn()}
+                    {/if}
+                    {if !$user->isLoggedIn()}
                         <h3 class="title is-3">Pro hádání je potřeba se <a n:href="Homepage:login">přihlásit</a></h3>
                     {/if}
                 </div>
@@ -138,5 +145,3 @@
 
 
 {/block}
-
-{block script}
