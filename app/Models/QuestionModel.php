@@ -98,7 +98,7 @@ class QuestionModel {
 		$question = $this->fetch($questionId);
 
 		$score = [];
-		$guesses = $question->related('guess');
+		$guesses = $question->related('guess')->order('date, id');
 		$bonusPoints = $this->fetchBonusPoints($question['id']);
 		foreach ($guesses as $guess) {
 
@@ -121,10 +121,29 @@ class QuestionModel {
 			if ($b['combinedPoints'] !== $a['combinedPoints']) {
 				return $b['combinedPoints'] <=> $a['combinedPoints'];
 			}
-			return $b['date'] <=> $a['date'];
+			if ($a['date'] !== $b['date']){
+				return $a['date'] <=> $b['date'];
+			}
+			return $a['id'] <=> $b['id'];
 		});
 
 		return $score;
+
+	}
+
+	public function fetchStats(int $questionId) {
+
+		$minMax = $this->db
+			->table(\Table::GUESS)
+			->select('MIN(date) AS min_date, MAX(date) AS max_date, COUNT(*) AS total_count')
+			->where('question_id', $questionId)
+			->fetch();
+
+		return [
+			'minDate' => $minMax['min_date'],
+			'maxDate' => $minMax['max_date'],
+			'guessCount' => $minMax['total_count'],
+		];
 
 	}
 
@@ -135,7 +154,7 @@ class QuestionModel {
 		$questions = $this->fetchAll();
 
 		foreach ($questions as $question) {
-			$guesses = $question->related('guess');
+			$guesses = $question->related('guess')->order('date, id');
 			$bonusPoints = $this->fetchBonusPoints($question['id']);
 			foreach ($guesses as $guess) {
 
@@ -148,7 +167,6 @@ class QuestionModel {
 				} else {
 					$total[$guess->user_id] = [
 						'user' => $guess->user,
-						'guess' => $guess,
 						'totalPoints' => $points + $userBonusPoints,
 					];
 				}

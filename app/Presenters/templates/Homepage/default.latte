@@ -42,7 +42,7 @@
                 </div>
                 <div class="column is-half">
                     {if !$showQuestion}
-                        <h3 class="title is-3">Hrajeme kadžý den od {=App\Models\QuestionModel::START}:00 do {=App\Models\QuestionModel::END}:00</h3>
+                        <h3 class="title is-3">Hrajeme každý den od {=App\Models\QuestionModel::START}:00 do {=App\Models\QuestionModel::END}:00</h3>
                     {/if}
                     {if $showQuestion && $question}
                         <h2 class="title is-2">{$question['name']}</h2>

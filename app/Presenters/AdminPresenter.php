@@ -113,4 +113,11 @@ final class AdminPresenter extends BasePresenter {
 
 	}
 
+	public function renderResults(int $id) {
+
+		$this->template->score = $this->questionModel->fetchScore($id);
+		$this->template->question = $this->questionModel->fetch($id);
+
+	}
+
 }

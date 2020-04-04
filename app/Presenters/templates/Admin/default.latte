@@ -55,7 +55,8 @@
         </td>
         <td>
             <a n:href="question, id => $question['id']" class="button is-primary">Upravit</a>
-            <a n:href="delete!, id => $question['id']" class="button is-danger">Smazat</a>
+            <a n:href="results, id => $question['id']" class="button is-warning">Výsledky</a>
+            <a n:href="delete!, id => $question['id']" class="button is-danger" onclick="return confirm('Opravdu?')">Smazat</a>
         </td>
     </tr>
     </tbody>

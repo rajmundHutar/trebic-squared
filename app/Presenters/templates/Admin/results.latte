@@ -1,0 +1,44 @@
+{block content}
+
+{control adminMenu}
+
+{var $questionCoords = App\Models\QuestionModel::cartesianToAlphaNumber($question['x'], $question['y'])}
+
+<div class="columns">
+    <div class="column is-centered">
+        <h1 class="title is-5">{$question['date']|date:'j. n. Y'} - {$question['name']}</h1>
+        <h1 class="subtitle is-6">
+            Správná odpověď: <a n:href="Homepage:#map, highlightCorrect => $questionCoords">
+                {$questionCoords}
+            </a>
+        </h1>
+        <table class="table" n:if="$score">
+            <thead>
+            <tr>
+                <th>Pořadí</th>
+                <th>Čas</th>
+                <th>Tým</th>
+                <th>Odpověď</th>
+                <th>Bodů</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr n:foreach="$score as $row">
+                <td>{$iterator->counter}</td>
+                <td>{$row['date']|date:'H:i:s'}</td>
+                <td>{$row['user']['name']}</td>
+                <td>
+                    <a n:href="Homepage:#map, highlightCorrect => $questionCoords, highlightGuess => $row['guess']">
+                        {$row['guess']}
+                    </a>
+                </td>
+                <td>
+                    {$row['points']}
+                    {if $row['bonusPoints'] ?? null} + {$row['bonusPoints']}{/if}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <p n:if="!$score">Žádné výsledky</p>
+    </div>
+</div>

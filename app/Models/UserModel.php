@@ -43,6 +43,15 @@ class UserModel implements IAuthenticator {
 
 	}
 
+	public function fetchCount() {
+
+		return $this->db
+			->table(\Table::USER)
+			->where('role != ?', 'admin')
+			->count('*');
+
+	}
+
 	public function save(array $data) {
 
 		$data['password'] = $this->passwords->hash($data['password']);

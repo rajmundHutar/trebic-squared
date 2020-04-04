@@ -180,8 +180,24 @@ final class HomepagePresenter extends BasePresenter {
 			$this->redirect('default');
 		}
 
-		$this->template->score = $this->questionModel->fetchScore($id);
+		$score = $this->questionModel->fetchScore($id);
+		$stats = $this->questionModel->fetchStats($id);
+		$stats['pointsDistribution'] = [];
+
+		foreach($score as $row) {
+
+			if (isset($stats['pointsDistribution'][$row['points']])) {
+				$stats['pointsDistribution'][$row['points']] += 1;
+			} else {
+				$stats['pointsDistribution'][$row['points']] = 1;
+			}
+		}
+
+		$stats['userCount'] = $this->userModel->fetchCount();
+
 		$this->template->question = $question;
+		$this->template->score = $score;
+		$this->template->stats = $stats;
 
 	}
 
