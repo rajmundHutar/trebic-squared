@@ -5,7 +5,7 @@
         <h1 class="title is-3">Výsledky ze dne {$question['date']|date:'j. n. Y'}</h1>
         <h2 class="subtitle is-3">{$question['name']}</h2>
         <p>
-            Svoji odpověď poslalo {$stats['guessCount']} z {$stats['userCount']} uživatelů.
+            Svoji odpověď poslalo {$stats['guessCount']} ze {$stats['userCount']} uživatelů.
             {var $correct = $stats['pointsDistribution'][10] ?? 0}
             {if $correct == 0}
                 Správný čtvereček nenašel žádný uživatel.
@@ -22,7 +22,7 @@
         <table class="table">
             <thead>
             <tr>
-                <th>Pořet bodů:</th>
+                <th>Počet bodů:</th>
                 <th n:for="$i = 10; $i >= 0; $i--">{$i}</th>
             </tr>
             </thead>
@@ -33,6 +33,10 @@
             </tr>
             </tbody>
         </table>
+        {var $questionCoords = App\Models\QuestionModel::cartesianToAlphaNumber($question['x'], $question['y'])}
+        <a n:href="Homepage:#map, highlightCorrect => $questionCoords, highlightGuess => implode(',', $stats['otherGuesses'] ?? [])" class="button is-warning">
+            Ukázat všechny odpovědi na mapě
+        </a>
     </div>
 </div>
 

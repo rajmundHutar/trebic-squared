@@ -148,9 +148,14 @@ final class HomepagePresenter extends BasePresenter {
 
 		$highlightCorrect = mb_strtoupper($highlightCorrect ?: '');
 		$highlightGuess = mb_strtoupper($highlightGuess ?: '');
+		if ($highlightGuess) {
+			$highlightGuess = explode(',', $highlightGuess);
+		} else {
+			$highlightGuess = [];
+		}
 
 		$this->template->highlightCorrect = $highlightCorrect;
-		$this->template->highlightGuess = $highlightCorrect != $highlightGuess ? $highlightGuess : null;
+		$this->template->highlightGuess = !in_array($highlightCorrect, $highlightGuess) ? $highlightGuess : [];
 
 		$this->template->height = self::HEIGHT;
 		$this->template->width = self::WIDTH;
@@ -170,7 +175,7 @@ final class HomepagePresenter extends BasePresenter {
 		$question = $this->questionModel->fetch($id);
 
 		$d = new \DateTime();
-		if ($question['date']->format('Y-m-d') > $d->format('Y-m-d')) {
+		if (!$question || $question['date']->format('Y-m-d') > $d->format('Y-m-d')) {
 			$this->flashMessage('Otázka nenalezena', \Flash::ERROR);
 			$this->redirect('playedGames');
 		}
@@ -180,20 +185,27 @@ final class HomepagePresenter extends BasePresenter {
 			$this->redirect('default');
 		}
 
+		$correctCoords = QuestionModel::cartesianToAlphaNumber( $question['x'], $question['y']);
+
 		$score = $this->questionModel->fetchScore($id);
 		$stats = $this->questionModel->fetchStats($id);
+		$stats['userCount'] = $this->userModel->fetchCount();
 		$stats['pointsDistribution'] = [];
+		$stats['otherGuesses'] = [];
 
 		foreach($score as $row) {
-
 			if (isset($stats['pointsDistribution'][$row['points']])) {
 				$stats['pointsDistribution'][$row['points']] += 1;
 			} else {
 				$stats['pointsDistribution'][$row['points']] = 1;
 			}
+
+			if ($row['guess'] != $correctCoords) {
+				$stats['otherGuesses'][] = $row['guess'];
+			}
 		}
 
-		$stats['userCount'] = $this->userModel->fetchCount();
+		$stats['otherGuesses'] = array_unique($stats['otherGuesses']);
 
 		$this->template->question = $question;
 		$this->template->score = $score;
