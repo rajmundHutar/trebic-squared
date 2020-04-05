@@ -12,11 +12,14 @@
                 <div class="column is-four-fifths">
                     <h3 class="title is-3">Milí Třebíčáci,</h3>
                     <p>
-                        jelikož to vypadá, že současná situace nás bude ještě nějakou dobu omezovat v našich jinak běžných aktivitách, připravili jsme pro všechny zájemce drobnou on-line hru. Zjistíte u ní, jak moc jste všímaví a znáte své město.
+                        jelikož to vypadá, že současná situace nás bude ještě nějakou dobu omezovat v našich jinak
+                        běžných aktivitách, připravili jsme pro všechny zájemce drobnou on-line hru. Zjistíte u ní, jak
+                        moc jste všímaví a znáte své město.
                     </p>
                     <p>
                         Hra vám nezabere více než pár minut denně a její princip je velmi
-                        jednoduchý – každý den přesně v {=App\Models\QuestionModel::START}:00 hodin zveřejníme fotografii
+                        jednoduchý – každý den přesně v {=App\Models\QuestionModel::START}:00 hodin zveřejníme
+                        fotografii
                         zachycující nějaké místo v Třebíči a vaším úkolem bude vybrat na mapě
                         přesné místo, kde se vyfocený objekt nachází.
                     </p>
@@ -25,11 +28,11 @@
                 <div class="column ">
                     <div class="facebook">
                         <div>
-                        <a href="https://www.facebook.com/Trebicsquared-107548000907836" target="_blank">
+                            <a href="https://www.facebook.com/Trebicsquared-107548000907836" target="_blank">
                             <span class="icon is-large">
                                  <i class="fab fa-3x fa-facebook-square"></i>
                             </span>
-                        </a>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -43,7 +46,8 @@
                 <div n:class="column, $showQuestion && $question ? is-half">
                     {if !$showQuestion}
                         <h3 class="title is-3">
-                            Hrajeme každý den od {=App\Models\QuestionModel::START}:00 do {=App\Models\QuestionModel::END}:00
+                            Hrajeme každý den od {=App\Models\QuestionModel::START}:00
+                            do {=App\Models\QuestionModel::END}:00
                             <small class="current-time">Aktuální čas: {(new DateTIme())|date:'H:i:s'}</small>
                         </h3>
                     {/if}
@@ -74,21 +78,29 @@
         </div>
     </section>
 
+    <div class="zoom-wrapper">
+        <span>Zoom:</span>
+        <a class="zoom button" data-zoom="1">1x</a>
+        <a class="zoom button" data-zoom="2">2x</a>
+        <a class="zoom button" data-zoom="4">4x</a>
+    </div>
     <a id="map"></a>
-    <div id="game">
-        {for $j = 0; $j < $height; $j++}
-            {for $i = 0; $i < $width; $i++}
-                {var $x = $i + 1}
-                {var $y = App\Models\QuestionModel::intToAlpha($j)}
-                <div n:class="square, $user->isLoggedIn() ? clickable, $y.$x == $highlightCorrect ? highlight-correct, in_array($y.$x, $highlightGuess) ? highlight-guess"
-                        data-coordinates="{$y}{$x}" data-cartez="{$i}x{$j}">
-                    <div n:class="coordinates, $i==0 || $j==0 ? show"
-                            data-coordinates="{$y}{$x}">
-                        {$j!=0 || ($i==$j && $i==0) ? $y : ""}{$i!=0 || ($i==$j && $i==0) ? $x : ""}
+    <div id="game-wrapper">
+        <div id="game">
+            {for $j = 0; $j < $height; $j++}
+                {for $i = 0; $i < $width; $i++}
+                    {var $x = $i + 1}
+                    {var $y = App\Models\QuestionModel::intToAlpha($j)}
+                    <div n:class="square, $user->isLoggedIn() ? clickable, $y.$x == $highlightCorrect ? highlight-correct, in_array($y.$x, $highlightGuess) ? highlight-guess"
+                            data-coordinates="{$y}{$x}" data-cartez="{$i}x{$j}">
+                        <div n:class="coordinates, $i==0 || $j==0 ? show"
+                                data-coordinates="{$y}{$x}">
+                            {$j!=0 || ($i==$j && $i==0) ? $y : ""}{$i!=0 || ($i==$j && $i==0) ? $x : ""}
+                        </div>
                     </div>
-                </div>
+                {/for}
             {/for}
-        {/for}
+        </div>
     </div>
 
 {/block}
@@ -124,13 +136,14 @@
                             </div>
                         {/form}
                     {else}
-                        <h3 class="title is-3">Hrajeme od {=App\Models\QuestionModel::START}:00 do {=App\Models\QuestionModel::END}:00</h3>
+                        <h3 class="title is-3">Hrajeme od {=App\Models\QuestionModel::START}:00
+                            do {=App\Models\QuestionModel::END}:00</h3>
                     {/if}
                     {if $user->isInRole('admin')}
                         {form prefillQuestionForm}
                             <div class="field">
                                 <div class="control">
-                                {input prefill, class => "input", id => "prefill"}
+                                    {input prefill, class => "input", id => "prefill"}
                                 </div>
                             </div>
 
