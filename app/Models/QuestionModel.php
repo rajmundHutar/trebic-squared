@@ -164,17 +164,24 @@ class QuestionModel {
 
 				if (isset($total[$guess->user_id])) {
 					$total[$guess->user_id]['totalPoints'] += $points + $userBonusPoints;
+					$total[$guess->user_id]['timeSum'] += $guess['date']->getTimestamp();
+					$total[$guess->user_id]['playedGames'] += 1;
 				} else {
 					$total[$guess->user_id] = [
 						'user' => $guess->user,
+						'timeSum' => $guess['date']->getTimestamp(),
 						'totalPoints' => $points + $userBonusPoints,
+						'playedGames' => 1,
 					];
 				}
 			}
 		}
 
 		usort($total, function ($a, $b) {
-			return $b['totalPoints'] <=> $a['totalPoints'];
+			if ($b['totalPoints'] !== $a['totalPoints']) {
+				return $b['totalPoints'] <=> $a['totalPoints'];
+			}
+			return $a['timeSum'] <=> $b['timeSum'];
 		});
 
 		return $total;

@@ -13,7 +13,7 @@
             </thead>
             <tbody>
             <tr n:foreach="$total as $row" n:class="$user->isLoggedIn() && $user->getId() == $row['user']['id'] ? is-selected">
-                <td>{$iterator->counter}</td>
+                <td title="Odehráno her: {$row['playedGames']}">{$iterator->counter}</td>
                 <td>{$row['user']['name']}</td>
                 <td class="has-text-right">{$row['totalPoints']}</td>
             </tr>

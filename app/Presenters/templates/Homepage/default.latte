@@ -93,9 +93,9 @@
                     {var $y = App\Models\QuestionModel::intToAlpha($j)}
                     <div n:class="square, $user->isLoggedIn() ? clickable, $y.$x == $highlightCorrect ? highlight-correct, in_array($y.$x, $highlightGuess) ? highlight-guess"
                             data-coordinates="{$y}{$x}" data-cartez="{$i}x{$j}">
-                        <div n:class="coordinates, $i==0 || $j==0 ? show"
+                        <div n:class="coordinates"
                                 data-coordinates="{$y}{$x}">
-                            {$j!=0 || ($i==$j && $i==0) ? $y : ""}{$i!=0 || ($i==$j && $i==0) ? $x : ""}
+                            <span n:class="$i==0 || $i==$width-1 ? show" data-coordinates="{$y}{$x}">{$y}</span><span n:class="$j==0 || $j==$height-1 ? show" data-coordinates="{$y}{$x}">{$x}</span>
                         </div>
                     </div>
                 {/for}

@@ -6,6 +6,11 @@ let beginPosition = {};
 let newPosition = {};
 let game;
 
+const LEFT_KEY = 'ArrowLeft';
+const UP_KEY = 'ArrowUp';
+const RIGHT_KEY = 'ArrowRight';
+const DOWN_KEY = 'ArrowDown';
+
 function repeatOften() {
 	if (game) {
 		game.style.left = newPosition.x + 'px';
@@ -52,40 +57,78 @@ function leave(e) {
 
 function move(e) {
 	if (isDragging) {
+
 		let x = e.clientX || e.changedTouches[0].clientX;
-		let newX = beginPosition.x + x - start.x;
-		newX = Math.min(newX, 0);
-		newX = Math.max(newX, -(zoom - 1) * document.documentElement.clientWidth);
+		newPosition.x = clampX(beginPosition.x + x - start.x);
 
 		let y = e.clientY || e.changedTouches[0].clientY;
-		let newY = beginPosition.y + y - start.y;
-		newY = Math.min(newY, 0);
-		newY = Math.max(newY, -(zoom - 1) * 0.64 * document.documentElement.clientWidth);
+		newPosition.y = clampY(beginPosition.y + y - start.y);
 
-		newPosition.x = newX;
-		newPosition.y = newY;
 	}
 
 }
+
+function clampX(x) {
+	return Math.max(Math.min(x, 0), -(zoom - 1) * document.documentElement.clientWidth);
+}
+
+function clampY(y) {
+	return Math.max(Math.min(y, 0), -(zoom - 1) * 0.64 * document.documentElement.clientWidth);
+}
+
+window.addEventListener('keydown', (e) => {
+
+	if (!game) {
+		return;
+	}
+
+	console.log(e.code);
+
+	beginPosition.x = parseInt(game.style.left);
+	beginPosition.y = parseInt(game.style.top);
+
+	switch (true) {
+		case e.code == DOWN_KEY:
+			//newPosition.x = beginPosition.x + 100;
+			newPosition.y = clampY(beginPosition.y - 100);
+			e.preventDefault();
+			break;
+		case e.code == UP_KEY:
+			//newPosition.x = beginPosition.x + 100;
+			newPosition.y = clampY(beginPosition.y + 100);
+			e.preventDefault();
+			break;
+		case e.code == LEFT_KEY:
+			newPosition.x = clampX(beginPosition.x + 100);
+			e.preventDefault();
+			break;
+		case e.code == RIGHT_KEY:
+			newPosition.x = clampX(beginPosition.x - 100);
+			e.preventDefault();
+			break;
+	}
+});
 
 window.addEventListener('load', (e) => {
 
 	game = document.getElementById('game');
 
-	game.style.top = '0px';
-	game.style.left = '0px';
+	if (game) {
+		game.style.top = '0px';
+		game.style.left = '0px';
 
-	game.addEventListener('mousedown', down);
-	game.addEventListener('touchstart', down);
+		game.addEventListener('mousedown', down);
+		game.addEventListener('touchstart', down);
 
-	game.addEventListener('mouseup', up);
-	game.addEventListener('touchend', up);
+		game.addEventListener('mouseup', up);
+		game.addEventListener('touchend', up);
 
-	game.addEventListener('mouseleave', leave);
-	game.addEventListener('touchcancel', leave);
+		game.addEventListener('mouseleave', leave);
+		game.addEventListener('touchcancel', leave);
 
-	game.addEventListener('mousemove', move);
-	game.addEventListener('touchmove', move);
+		game.addEventListener('mousemove', move);
+		game.addEventListener('touchmove', move);
+	}
 
 	document.querySelectorAll('.zoom').forEach((zoomElement) => {
 		zoomElement.addEventListener("click", (e) => {

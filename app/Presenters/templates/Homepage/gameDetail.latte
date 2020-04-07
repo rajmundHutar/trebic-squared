@@ -7,15 +7,16 @@
         <p>
             Svoji odpověď poslalo {$stats['guessCount']} ze {$stats['userCount']} uživatelů.
             {var $correct = $stats['pointsDistribution'][10] ?? 0}
+            {var $percent = $correct / $stats['guessCount'] * 100}
             {if $correct == 0}
                 Správný čtvereček nenašel žádný uživatel.
             {elseif $correct == 1}
-                Správný čtvereček našel 1 uživatel.
+                Správný čtvereček našel 1 uživatel, tedy {if $percent < 5}{$percent|number:2}%{else}{$percent|number:0}%{/if} správných odpovědí.
             {elseif $correct >= 2 && $correct <=4}
-                Správný čtvereček našli {$correct} uživatelé.
+                Správný čtvereček našli {$correct} uživatelé, tedy {if $percent < 5}{$percent|number:2}%{else}{$percent|number:0}%{/if} správných odpovědí.
             {else}
-                Správný čtvereček našlo {$correct} uživatelů.
-            {/if}
+                Správný čtvereček našlo {$correct} uživatelů, tedy {if $percent < 5}{$percent|number:2}%{else}{$percent|number:0}%{/if} správných odpovědí.
+            {/if}<br>
             První odpověď přišla už v {$stats['minDate']|date:'H:i:s'}, poslední v {$stats['maxDate']|date:'H:i:s'}.
         </p>
         <br><br>
