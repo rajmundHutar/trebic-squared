@@ -11,6 +11,7 @@
         <th>ID</th>
         <th>Jméno týmu</th>
         <th>e-mail</th>
+        <th>Posílat notifikace</th>
     </tr>
     </thead>
     <tbody>
@@ -19,12 +20,17 @@
         <td>{$userData['id']}</td>
         <td>{$userData['name']}</td>
         <td>{$userData['email']}</td>
-        {var $mails[] = $userData['email']}
+        <td>{$userData['notify'] ? 'ANO' : 'NE'}</td>
+        {if $userData['notify']}
+            {var $mails[] = $userData['email']}
+        {/if}
     </tr>
     </tbody>
 </table>
 
+
 <div class="field">
+    <div class="label">Uživatelé, kteří chtějí posílat notifikace:</div>
     <div class="control">
         <textarea class="textarea" readonly onClick="this.select();">{=implode(', ', $mails)}</textarea>
     </div>

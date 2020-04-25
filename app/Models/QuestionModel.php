@@ -294,7 +294,14 @@ class QuestionModel {
 			/** @var FileUpload $image */
 			$name = bin2hex(random_bytes(10));
 			$newPath = '/images/' . $folder . '/' . $name . $ext;
-			move_uploaded_file($image->getTemporaryFile(), $this->wwwDir . $newPath);
+
+			$i = new \Imagick();
+			$i->readImage($image->getTemporaryFile());
+			$i->stripImage();
+			$i->profileImage('*', null);
+			$i->writeImage($this->wwwDir . $newPath);
+			$i->destroy();
+
 			$newPaths[] = $newPath;
 		}
 
