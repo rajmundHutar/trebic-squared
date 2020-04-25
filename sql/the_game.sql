@@ -48,3 +48,7 @@ ALTER TABLE `user`
 CHANGE `name` `name` varchar(255) COLLATE 'utf8_czech_ci' NOT NULL AFTER `password`;
 ALTER TABLE `user`
 ADD UNIQUE `name` (`name`);
+
+ALTER TABLE `user`
+ADD `password_hash` varchar(255) COLLATE 'utf8_czech_ci' NULL,
+ADD `password_time` datetime NULL AFTER `password_hash`;

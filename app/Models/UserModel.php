@@ -35,6 +35,15 @@ class UserModel implements IAuthenticator {
 
 	}
 
+	public function fetchByMail(string $email) {
+
+		return $this->db
+			->table(\Table::USER)
+			->where('email', $email)
+			->fetch();
+
+	}
+
 	public function fetchAll() {
 
 		return $this->db
@@ -106,4 +115,23 @@ class UserModel implements IAuthenticator {
 		]);
 
 	}
+
+	public function generateForgottenPassHash(string $email): string {
+
+		$user = $this->fetchByMail($email);
+
+		if (!$user) {
+			return '';
+		}
+
+		$hash = bin2hex(random_bytes(16));
+		$user->update([
+			'password_hash' => $hash,
+			'password_time' => new \DateTime(),
+		]);
+
+		return $hash;
+
+	}
+
 }

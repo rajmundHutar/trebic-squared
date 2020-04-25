@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Presenters;
 
+use App\Factories\ForgottenPasswordFormFactory;
 use App\Factories\GuessFormFactory;
 use App\Factories\LoginFormFactory;
 use App\Factories\PrefillQuestionFormFactory;
 use App\Factories\RegisterFormFactory;
 use App\Models\GuessModel;
+use App\Models\MailModel;
 use App\Models\QuestionModel;
 use App\Models\UserModel;
 use Nette;
@@ -27,15 +29,21 @@ final class HomepagePresenter extends BasePresenter {
 	/** @var GuessModel */
 	protected $guessModel;
 
+	/** @var MailModel */
+	protected $mailModel;
+
 	public function __construct(
 		UserModel $userModel,
 		QuestionModel $questionModel,
-		GuessModel $guessModel
+		GuessModel $guessModel,
+		MailModel $mailModel
 	) {
 
 		$this->userModel = $userModel;
 		$this->questionModel = $questionModel;
 		$this->guessModel = $guessModel;
+		$this->mailModel = $mailModel;
+
 	}
 
 	public function actionLogout() {
@@ -134,6 +142,29 @@ final class HomepagePresenter extends BasePresenter {
 
 			$values = $form->getValues(true);
 			$this->redirect('Admin:question', ['prefill' => $values['prefill'] ?? null]);
+
+		});
+
+	}
+
+	public function createComponentForgottenPasswordForm() {
+
+		return ForgottenPasswordFormFactory::create(function(Nette\Application\UI\Form $form) {
+
+			$values = $form->getValues(true);
+			$email = (string)$values['email'];
+
+			$hash = $this->userModel->generateForgottenPassHash($email);
+
+			if ($hash) {
+
+				$this->mailModel->sendForgottenPasswordMail($email, $hash);
+
+			}
+
+			$this->flashMessage('Na zadaný e-mail byla odeslána zpráva pro obnovu hesla.', \Flash::SUCCESS);
+			$this->redirect('default');
+			return;
 
 		});
 

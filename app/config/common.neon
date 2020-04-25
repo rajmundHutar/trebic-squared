@@ -16,3 +16,4 @@ services:
 	authenticator: App\Models\UserModel
 	- App\Models\QuestionModel(%wwwDir%)
 	- App\Models\GuessModel
+	- App\Models\MailModel(%smtp.host%, %smtp.username%, %smtp.password%)

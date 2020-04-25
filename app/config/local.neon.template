@@ -1,0 +1,10 @@
+parameters:
+    smtp:
+        host: 'smtp.gmail.com'
+        username: 'example@gmail.com'
+        password: 'Password123'
+
+database:
+	dsn: 'mysql:host=127.0.0.1;dbname=the_game'
+	user: admin
+	password: admin
