@@ -85,6 +85,7 @@
         <a class="zoom button" data-zoom="2">2x</a>
         <a class="zoom button" data-zoom="4">4x</a>
     </div>
+    {var $maxHeatmap = 130}
     <a id="map"></a>
     <div id="game-wrapper">
         <div id="game">
@@ -93,7 +94,12 @@
                     {var $x = $i + 1}
                     {var $y = App\Models\QuestionModel::intToAlpha($j)}
                     <div n:class="square, $user->isLoggedIn() ? clickable, $y.$x == $highlightCorrect ? highlight-correct, in_array($y.$x, $highlightGuess) ? highlight-guess"
-                            data-coordinates="{$y}{$x}" data-cartez="{$i}x{$j}">
+                            data-coordinates="{$y}{$x}" data-cartez="{$i}x{$j}"
+                            {if $heatMap[$y.$x] ?? null}
+                                style="background-color: {=App\Models\GuessModel::getHeatMapColor($heatMap[$y.$x], $maxHeatmap)|noescape}"
+                                title="{$heatMap[$y.$x]}"
+                            {/if}
+                    >
                         <div n:class="coordinates"
                                 data-coordinates="{$y}{$x}">
                             <span n:class="$i==0 || $i==$width-1 ? show" data-coordinates="{$y}{$x}">{$y}</span><span n:class="$j==0 || $j==$height-1 ? show" data-coordinates="{$y}{$x}">{$x}</span>

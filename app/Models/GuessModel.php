@@ -6,6 +6,14 @@ use Nette\Database\Context;
 
 class GuessModel {
 
+	const LOW_HEATMAP_COLOR = [
+		65, 169, 76
+	];
+
+	const HIGH_HEATMAP_COLOR = [
+		255, 40, 0
+	];
+
 	/** @var Context  */
 	protected $db;
 
@@ -56,6 +64,36 @@ class GuessModel {
 			->table(\Table::GUESS)
 			->where('user_id', $userId)
 			->fetchAssoc('question_id');
+
+	}
+
+	public function fetchHeatMap(): array {
+
+		$rows = $this->db
+			->table(\Table::GUESS)
+			->select('COUNT(*) AS total, x, y')
+			->group('x, y')
+			->fetchAll();
+
+		$res = [];
+		foreach($rows as $row) {
+			$key = QuestionModel::cartesianToAlphaNumber($row['x'], $row['y']);
+			$res[$key] = $row['total'];
+		}
+
+		return $res;
+
+	}
+
+	public static function getHeatMapColor(int $number, int $max) {
+
+		$percent = $number / $max;
+		$rgb = [];
+		for ($i = 0; $i < 3 ; $i++) {
+			$rgb[$i] = round(self::LOW_HEATMAP_COLOR[$i] + $percent * (self::HIGH_HEATMAP_COLOR[$i] - self::LOW_HEATMAP_COLOR[$i]));
+		}
+
+		return sprintf('rgba(%d, %d, %d, .5)', $rgb[0], $rgb[1], $rgb[2]);
 
 	}
 

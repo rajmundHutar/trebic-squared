@@ -139,7 +139,7 @@ final class HomepagePresenter extends BasePresenter {
 
 	}
 
-	public function renderDefault($highlightCorrect = null, $highlightGuess = null) {
+	public function renderDefault($highlightCorrect = null, $highlightGuess = null, $heatMap = null) {
 
 		$question = $this->questionModel->fetchByDate(new \DateTime());
 		$this->template->question = $question;
@@ -152,6 +152,10 @@ final class HomepagePresenter extends BasePresenter {
 			$highlightGuess = explode(',', $highlightGuess);
 		} else {
 			$highlightGuess = [];
+		}
+
+		if ($heatMap) {
+			$this->template->heatMap = $this->guessModel->fetchHeatMap();
 		}
 
 		$this->template->highlightCorrect = $highlightCorrect;
