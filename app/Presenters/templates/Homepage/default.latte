@@ -44,22 +44,54 @@
                     </a>
                 </div>
                 <div n:class="column, $showQuestion && $question ? is-half">
-                    {if !$showQuestion}
+                    {if App\Presenters\HomepagePresenter::GAME_ENDED}
                         <h3 class="title is-3">
-                            Hrajeme každý den od {=App\Models\QuestionModel::START}:00
-                            do {=App\Models\QuestionModel::END}:00.
-                            <small class="current-time">Aktuální čas: {(new DateTIme())|date:'H:i:s'}</small>
+                            Hráli jsme každý den od 4. 4. 2020 do 26. 4. 2020
                         </h3>
-                        <h3 class="title is-3">Poslední kolo proběhne v neděli 26. dubna.</h3>
-                    {/if}
-                    {if $showQuestion && $question}
-                        <h2 class="title is-2">{$question['name']}</h2>
-                        <p>{$question['description']}</p>
-                    {elseif !$question && $user->isInRole('admin')}
-                        <h4 class="title is-4">Dneska zatím žádná otázka.</h4>
-                    {/if}
-                    {if !$user->isLoggedIn()}
-                        <h3 class="title is-3">Pro hádání je potřeba se <a n:href="Homepage:login">přihlásit</a></h3>
+                        <h4 class="title is-4">
+                            Top 5 týmů:
+                        </h4>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Pořadí</th>
+                                <th>Tým</th>
+                                <th class="has-text-right">Celkem bodů</th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="10" class="has-text-centered">
+                                        <a n:href="Homepage:score">Všechny výsledky</a><br><br>
+                                        <a n:href="Homepage:#map, heatMap => 1" class="button is-warning">Zobrazit přehled všech odpovědí na mapě</a>
+                                    </th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                            <tr n:foreach="$total as $row" n:class="$user->isLoggedIn() && $user->getId() == $row['user']['id'] ? is-selected">
+                                <td title="Odehráno her: {$row['playedGames']}">{$iterator->counter}</td>
+                                <td>{$row['user']['name']}</td>
+                                <td class="has-text-right">{$row['totalPoints']}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    {else}
+                        {if !$showQuestion}
+                            <h3 class="title is-3">
+                                Hrajeme každý den od {=App\Models\QuestionModel::START}:00
+                                do {=App\Models\QuestionModel::END}:00.
+                                <small class="current-time">Aktuální čas: {(new DateTIme())|date:'H:i:s'}</small>
+                            </h3>
+                        {/if}
+                        {if $showQuestion && $question}
+                            <h2 class="title is-2">{$question['name']}</h2>
+                            <p>{$question['description']}</p>
+                        {elseif !$question && $user->isInRole('admin')}
+                            <h4 class="title is-4">Dneska zatím žádná otázka.</h4>
+                        {/if}
+                        {if !$user->isLoggedIn()}
+                            <h3 class="title is-3">Pro hádání je potřeba se <a n:href="Homepage:login">přihlásit</a></h3>
+                        {/if}
                     {/if}
                 </div>
                 <div class="column" n:if="$showQuestion && $question">
@@ -93,7 +125,7 @@
                 {for $i = 0; $i < $width; $i++}
                     {var $x = $i + 1}
                     {var $y = App\Models\QuestionModel::intToAlpha($j)}
-                    <div n:class="square, $user->isLoggedIn() ? clickable, $y.$x == $highlightCorrect ? highlight-correct, in_array($y.$x, $highlightGuess) ? highlight-guess"
+                    <div n:class="square, clickable, $y.$x == $highlightCorrect ? highlight-correct, in_array($y.$x, $highlightGuess) ? highlight-guess"
                             data-coordinates="{$y}{$x}" data-cartez="{$i}x{$j}"
                             {if $heatMap[$y.$x] ?? null}
                                 style="background-color: {=App\Models\GuessModel::getHeatMapColor($heatMap[$y.$x], $maxHeatmap)|noescape}"

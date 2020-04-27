@@ -18,6 +18,8 @@ final class HomepagePresenter extends BasePresenter {
 	const WIDTH = 50;
 	const HEIGHT = 30;
 
+	const GAME_ENDED = true;
+
 	/** @var UserModel */
 	protected $userModel;
 
@@ -140,6 +142,8 @@ final class HomepagePresenter extends BasePresenter {
 	}
 
 	public function renderDefault($highlightCorrect = null, $highlightGuess = null, $heatMap = null) {
+
+		$this->template->total = $this->questionModel->fetchTotalScore(5);
 
 		$question = $this->questionModel->fetchByDate(new \DateTime());
 		$this->template->question = $question;

@@ -147,7 +147,7 @@ class QuestionModel {
 
 	}
 
-	public function fetchTotalScore() {
+	public function fetchTotalScore($top = null) {
 		$total = [];
 
 		// Fetches today AFTER its done
@@ -183,6 +183,10 @@ class QuestionModel {
 			}
 			return $a['timeSum'] <=> $b['timeSum'];
 		});
+
+		if ($top) {
+			array_splice($total, $top);
+		}
 
 		return $total;
 
